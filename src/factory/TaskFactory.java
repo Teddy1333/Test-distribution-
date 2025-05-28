@@ -6,8 +6,8 @@ public class TaskFactory {
     public Task createTask(StudentType type) {
 
         return switch (type) {
-            case WUNDERKIND -> new FunnyTask();
-            case FITNESS_FREAK -> new ConfusingTask();
+            case WUNDERKIND -> new ConfusingTask();
+            case FITNESS -> new FunnyTask();
             case LUCKY -> new EasyTask();
         };
     }

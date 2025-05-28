@@ -1,31 +1,60 @@
-import decorator.*;
+import student.Student;
+import student.StudentType;
 import strategy.*;
-import student.*;
 import university.Uni;
+
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter your name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("What type of student are you (WUNDERKIND / FITNESS / LUCKY): ");
+        String typeInput = scanner.nextLine().toUpperCase();
+        StudentType type = StudentType.valueOf(typeInput);
+
+        System.out.println("How do you commute to university:");
+        System.out.println("1 - Running and jumping");
+        System.out.println("2 - Teleporting");
+        System.out.println("3 - Sleep in the bus");
+        int arrivalChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        ArrivalStrategy arrivalStrategy = switch (arrivalChoice) {
+            case 1 -> new JumpRunArrival();
+            case 2 -> new TeleportArrival();
+            case 3 -> new SleepBusArrival();
+            default -> {
+                System.out.println("Unknown choice. Default: Running and jumping.");
+                yield new JumpRunArrival();
+            }
+        };
+
+        Student student = new Student(name, type, arrivalStrategy);
+
+        System.out.print("Would you like to change the way you commute? (yes/no): ");
+        String change = scanner.nextLine().toLowerCase();
+
+        if (change.equals("yes")) {
+            System.out.println("Choose a new way of commuting to university:");
+            System.out.println("1 - Running and jumping");
+            System.out.println("2 - Teleporting");
+            System.out.println("3 - Sleep in the bus");
+            int newChoice = scanner.nextInt();
+
+            ArrivalStrategy newStrategy = switch (newChoice) {
+                case 1 -> new JumpRunArrival();
+                case 2 -> new TeleportArrival();
+                case 3 -> new SleepBusArrival();
+                default -> arrivalStrategy;
+            };
+
+            student.setArrivalStrategy(newStrategy);
+        }
         Uni uni = Uni.getInstance();
-
-        // mimi kalitko s telepatiq i teleport
-        Student luckyStudent = new Student("Mimi", StudentType.LUCKY, new TeleportArrival());
-        luckyStudent = new Telepathy(luckyStudent);
-
-        // stef wunderkind s koncentracia i skoci i tichane
-        Student smartStudent = new Student("Stefi", StudentType.WUNDERKIND, new JumpRunArrival());
-        smartStudent = new SuperFocus(smartStudent);
-
-        //iva fintess spi v avtobusa i pishe burzo
-        Student gymStudent = new Student("Iva", StudentType.FITNESS_FREAK, new SleepBusArrival());
-        gymStudent = new FastWriting(gymStudent);
-
-        System.out.println("\n-- this is the test Mimi gets --");
-        uni.conductExam(luckyStudent);
-
-        System.out.println("\n-- this is the test Stefi gets --");
-        uni.conductExam(smartStudent);
-
-        System.out.println("\n-- this is the test Iva gets --");
-        uni.conductExam(gymStudent);
+        uni.conductExam(student);
     }
 }

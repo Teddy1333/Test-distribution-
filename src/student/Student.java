@@ -5,7 +5,7 @@ import strategy.ArrivalStrategy;
 public class Student {
     private final String name;
     private final StudentType type;
-    private final ArrivalStrategy arrivalStrategy;
+    private ArrivalStrategy arrivalStrategy;
 
     public Student(String name, StudentType type, ArrivalStrategy arrivalStrategy) {
         this.name = name;
@@ -24,8 +24,13 @@ public class Student {
     public StudentType getType() {
         return type;
     }
+    public void setArrivalStrategy(ArrivalStrategy arrivalStrategy) {
+        this.arrivalStrategy = arrivalStrategy;
+    }
 
     public ArrivalStrategy getArrivalStrategy() {
         return arrivalStrategy;
     }
+
 }
+
